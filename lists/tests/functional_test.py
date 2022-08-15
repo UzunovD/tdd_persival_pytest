@@ -4,6 +4,8 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 @pytest.fixture()
@@ -40,10 +42,17 @@ class Test:
         # страница содержит "1: Купить павлиньи перья" в качестве
         # элемента списка
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        wait = WebDriverWait(self.driver, 10)
+        time.sleep(3)
 
-        table = self.driver.find_element_by_id('id_list_table')
-        rows = table.find_element_by_tag_name('tr')
+        table = self.driver.find_element(By.ID, 'id_list_table')
+        time.sleep(3)
+
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        time.sleep(3)
+        print(str(table))
+        print([r.get_attribute('textContent') for r in rows ])
+        print([r.text for r in rows ])
         assert any(row.text == "1: Купить павлиньи перья" for row in rows)
 
         # Текстовое поле по-прежнему приглашает ее добавить еще один
