@@ -19,6 +19,11 @@ def setup(request):
 
 @pytest.mark.usefixtures('setup')
 class Test:
+    def check_for_row_in_list_table(self, row_text:str):
+        table = self.driver.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        assert row_text in [row.text for row in rows]
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         """Тест: можно начать список и получить его позже"""
         # Эдит слышала про новое онлайн-приложение со списком
@@ -45,10 +50,7 @@ class Test:
         # wait = WebDriverWait(self.driver, 10)
         time.sleep(1)
 
-        table = self.driver.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        assert "1: Купить павлиньи перья" in [row.text for row in rows]
-
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
         # Текстовое поле по-прежнему приглашает ее добавить еще один
         # элемент. Она вводит "Сделать мушку из павлиньих перьев"
         inputbox = self.driver.find_element(By.ID, 'id_new_item')
@@ -57,9 +59,7 @@ class Test:
         time.sleep(1)
         # Старница обновляется и теперь показывает оба элемента ее
         # списка
-        table = self.driver.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        assert "1: Купить павлиньи перья" in [row.text for row in rows]
-        assert "2: Сделать мушку из павлиньих перьев" in [row.text for row in rows]
+        self.check_for_row_in_list_table("1: Купить павлиньи перья")
+        self.check_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         assert False, "Дописать тест!"
