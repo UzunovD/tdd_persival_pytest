@@ -42,22 +42,24 @@ class Test:
         # страница содержит "1: Купить павлиньи перья" в качестве
         # элемента списка
         inputbox.send_keys(Keys.ENTER)
-        wait = WebDriverWait(self.driver, 10)
-        time.sleep(3)
+        # wait = WebDriverWait(self.driver, 10)
+        time.sleep(1)
 
         table = self.driver.find_element(By.ID, 'id_list_table')
-        time.sleep(3)
-
         rows = table.find_elements(By.TAG_NAME, 'tr')
-        time.sleep(3)
-        print(str(table))
-        print([r.get_attribute('textContent') for r in rows ])
-        print([r.text for r in rows ])
-        assert any(row.text == "1: Купить павлиньи перья" for row in rows)
+        assert "1: Купить павлиньи перья" in [row.text for row in rows]
 
         # Текстовое поле по-прежнему приглашает ее добавить еще один
         # элемент. Она вводит "Сделать мушку из павлиньих перьев"
-        assert False, "Дописать тест!"
-
+        inputbox = self.driver.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Сделать мушку из павлиньих перьев')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
         # Старница обновляется и теперь показывает оба элемента ее
         # списка
+        table = self.driver.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        assert "1: Купить павлиньи перья" in [row.text for row in rows]
+        assert "2: Сделать мушку из павлиньих перьев" in [row.text for row in rows]
+
+        assert False, "Дописать тест!"
