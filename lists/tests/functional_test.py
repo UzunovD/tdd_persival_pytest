@@ -1,5 +1,4 @@
 import pytest
-import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -29,7 +28,7 @@ class Test:
         # Эдит слышала про новое онлайн-приложение со списком
         # неотложных дел. Она решает оценить его домашнюю страницу
 
-        # Она видит, что заголовок и шапка страницы говорят о
+        # Она видит, что заголовок и шапка страницы говорят о списке
         # неотложных дел
         assert 'To-Do' in self.driver.title
         headr_text = self.driver.find_element(By.TAG_NAME, 'h1').text
@@ -40,7 +39,7 @@ class Test:
         assert inputbox.get_attribute('placeholder') == \
                 'Enter a to-do item'
 
-        # Она набирвает в текстовом поле "Купить павлиньи перья"
+        # Она набирает в текстовом поле "Купить павлиньи перья"
         inputbox.send_keys('Купить павлиньи перья')
 
         # Когда она нажимает enter, страница обновляется, и теперь

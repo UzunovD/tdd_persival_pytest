@@ -1,3 +1,4 @@
+import time
 from django.test import TestCase
 
 from lists.models import Item
@@ -8,9 +9,29 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
+    def test_save_item_when_necessary(self):
+        response = self.client.get('/')
+        assert Item.objects.count() == 0
+
     def test_can_save_a_POST_request(self):
-        response = self.client.post('/', data={'item_text': 'A new list item'})
-        assert 'A new list item' in response.content.decode('utf-8')
+        self.client.post('/', data={'new_item_text': 'A new list item'})
+        assert Item.objects.count() == 1
+        new_item = Item.objects.first()
+        assert 'A new list item' in new_item.text
+
+    def test_redirects_aftre_POST(self):
+        response = self.client.post('/', data={'new_item_text': 'A new list item'})
+        assert response.status_code == 302
+        assert response['Location'] == '/'
+
+    def test_display_all_list_items(self):
+        Item.objects.create(text='itemy 1')
+        Item.objects.create(text='itemy 2')
+
+        response = self.client.get('/')
+
+        assert 'itemy 1' in response.content.decode()
+        assert 'itemy 2' in response.content.decode()
 
 
 class ItemModelTest(TestCase):
