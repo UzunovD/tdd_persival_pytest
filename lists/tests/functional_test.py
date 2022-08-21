@@ -63,3 +63,4 @@ class Test:
         self.check_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
 
         assert False, "Дописать тест!"
+
